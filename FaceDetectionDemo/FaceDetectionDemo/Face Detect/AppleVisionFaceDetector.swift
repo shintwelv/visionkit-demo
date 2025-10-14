@@ -74,26 +74,12 @@ public final class AppleVisionFaceDetector: FaceDetectable {
                       height: height.rounded(.toNearestOrAwayFromZero))
     }
 
-    /// convert nomalized points to image pixel positions
-    private func convertNormalizedPoints(_ points: [CGPoint], inFaceRect faceRectPx: CGRect, imageSize: CGSize) -> [CGPoint] {
-        // Vision: origin is bottom-left; UIKit/CGImage pixel space: origin is top-left
-        return points.map { p in
-            let x = faceRectPx.minX + p.x * faceRectPx.width
-            let yFromBottom = faceRectPx.minY + p.y * faceRectPx.height
-            let y = imageSize.height - yFromBottom
-            return CGPoint(x: x, y: y)
-        }
-    }
-
     private func mapLandmarks(_ obs: VNFaceObservation, imageSize: CGSize) -> [FaceLandmarks] {
         guard let lmk = obs.landmarks else { return [] }
-        let faceRectPx = convertNormalizedRect(obs.boundingBox, imageSize: imageSize)
 
         func pack(_ comp: VNFaceLandmarkRegion2D?, kind: FaceLandmarkKind) -> FaceLandmarks? {
             guard let comp, comp.pointCount > 0 else { return nil }
-            let pts = convertNormalizedPoints(comp.normalizedPoints,
-                                              inFaceRect: faceRectPx,
-                                              imageSize: imageSize)
+            let pts = comp.pointsInImage(imageSize: imageSize).map { CGPoint(x: $0.x, y: imageSize.height - $0.y) }
             return FaceLandmarks(kind: kind, points: pts)
         }
 

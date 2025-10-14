@@ -16,8 +16,8 @@ struct FaceDetectResultView: View {
         _viewModel = StateObject(wrappedValue: FaceDetectResultViewModel(image: image))
     }
     
-    var pointRadius: CGFloat = 5
-    var pointStrokeWidth: CGFloat = 2
+    var pointRadius: CGFloat = 3
+    var pointStrokeWidth: CGFloat = 1
     
     var body: some View {
         GeometryReader { geo in
@@ -44,22 +44,14 @@ struct FaceDetectResultView: View {
             }
             .contentShape(Rectangle())
         }
+        .onAppear {
+            viewModel.detectFace()
+        }
     }
-    
 }
 
 struct FaceDetectResultView_Previews: PreviewProvider {
-    static var sampleImage: UIImage {
-        let size = CGSize(width: 400, height: 300)
-        UIGraphicsBeginImageContextWithOptions(size, true, 1)
-        UIColor.black.setFill()
-        UIRectFill(CGRect(origin: .zero, size: size))
-        let img = UIGraphicsGetImageFromCurrentImageContext() ?? UIImage()
-        UIGraphicsEndImageContext()
-        return img
-    }
-
     static var previews: some View {
-        FaceDetectResultView(image: sampleImage)
+        FaceDetectResultView(image: UIImage(named: "Tim_Cook")!)
     }
 }

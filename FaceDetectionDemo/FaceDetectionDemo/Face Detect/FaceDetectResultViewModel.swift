@@ -15,4 +15,16 @@ final class FaceDetectResultViewModel: ObservableObject {
     init(image: UIImage) {
         self.image = image
     }
+    
+    func detectFace() {
+        Task {
+            let faceDetector: FaceDetectable = AppleVisionFaceDetector()
+            let detectedFaces: [DetectedFace] = try await faceDetector.detectFaces(in: self.image)
+            
+            let points: [CGPoint] = detectedFaces.flatMap { $0.landmarks }.flatMap { $0.points }
+            await MainActor.run {
+                self.facePoints = points
+            }
+        }
+    }
 }

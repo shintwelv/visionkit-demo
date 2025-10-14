@@ -1,5 +1,5 @@
 //
-//  SelectFaceView.swift
+//  SelectImageView.swift
 //  FaceDetectionDemo
 //
 //  Created by ShinIl Heo on 10/14/25.
@@ -8,7 +8,7 @@
 import SwiftUI
 import PhotosUI
 
-struct SelectFaceView: View {
+struct SelectImageView: View {
     @State private var pickedItem: PhotosPickerItem?
     @State private var image: UIImage?
     
@@ -61,5 +61,5 @@ struct SelectFaceView: View {
 }
 
 #Preview {
-    SelectFaceView()
+    SelectImageView()
 }

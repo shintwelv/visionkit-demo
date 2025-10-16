@@ -20,8 +20,17 @@ final class CompareImageResultViewModel: ObservableObject {
     
     func compareImages() {
         Task {
+            let imageComparator: ImageComparable = AppleVisionImageComparator()
+            let imageCompareResult: ImageCompareResult? = imageComparator.compareImages(first: firstImage, second: secondImage)
             await MainActor.run {
-                compareResult = "Comparison Ended. Not same"
+                if let imageCompareResult {
+                    self.compareResult = """
+                    featrue distance = \(imageCompareResult.distance)
+                    Two images look \(imageCompareResult.similar ? "similar" : "not similar")
+                    """
+                } else {
+                    self.compareResult = "Failed to compare images"
+                }
             }
         }
     }

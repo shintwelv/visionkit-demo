@@ -8,9 +8,16 @@
 import SwiftUI
 
 struct CompareImageResultView: View {
+    @StateObject var viewModel: CompareImageResultViewModel
     
     var firstImage: UIImage
     var secondImage: UIImage
+    
+    init(firstImage: UIImage, secondImage: UIImage) {
+        self.firstImage = firstImage
+        self.secondImage = secondImage
+        _viewModel = StateObject(wrappedValue: CompareImageResultViewModel(firstImage: firstImage, secondImage: secondImage))
+    }
     
     var body: some View {
         VStack(spacing: 16) {
@@ -34,8 +41,7 @@ struct CompareImageResultView: View {
             }
             
             ScrollView {
-                Text("""
-                """)
+                Text(viewModel.compareResult)
                 .multilineTextAlignment(.leading)
                 .frame(maxWidth: .infinity, alignment: .topLeading)
             }
@@ -43,6 +49,9 @@ struct CompareImageResultView: View {
                 .background(Color.gray.opacity(0.3))
         }
         .padding()
+        .onAppear {
+            viewModel.compareImages()
+        }
     }
 }
 
